@@ -27,5 +27,3 @@ function Log(msg, ref)
 	file:close()
 
 end
-
-RegisterNetEvent('fsx-engine:log', Log)

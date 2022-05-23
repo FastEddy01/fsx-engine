@@ -15,13 +15,9 @@ end
 
 Model.coords = function(coords, vector)
 	coords = coords or GetEntityCoords(PlayerPedId())
-	coords.x = coords.x or 0.0
-	coords.y = coords.y or 0.0
-	coords.z = coords.z or 0.0
-	coords.w = coords.h or coords.w
 	local datatype = type(coords)
-	coords = ((datatype == 'vector3' or datatype == 'table') and vector == 4) and vector4(coords.x, coords.y, coords.z, coords.w) or coords
-	coords = ((datatype == 'vector4' or datatype == 'table') and vector == 3) and vector3(coords.x, coords.y, coords.z) or coords
+	coords = ((datatype == 'vector3' or datatype == 'table') and vector == 4) and vector4((coords.x or 0.0), (coords.y or 0.0), (coords.z or 0.0), (coords.h or coords.w or 0.0)) or coords
+	coords = ((datatype == 'vector4' or datatype == 'table') and vector == 3) and vector3((coords.x or 0.0), (coords.y or 0.0), (coords.z or 0.0)) or coords
 	return coords
 end
 

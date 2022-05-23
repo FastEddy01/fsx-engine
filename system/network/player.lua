@@ -19,10 +19,14 @@ Player.VerifyMeta = function(Data)
 end
 
 Player.SaveMeta = function(Data)
+
 	if (Data or Data.info or Data.info.guid) == nil then
 		print('^1USER:SAVE:FATAL_ERROR | no guid given!!!^0')
 		return false
 	end
+
+	Log('started saving metadata', Data.info.guid)
+
 	local retval = true
 	local message = {}
 
@@ -50,18 +54,31 @@ Player.SaveMeta = function(Data)
 	end
 
 	for i = 1, #message, 1 do print(message[i]) end
+
+	Log('done saving metadata', Data.info.guid)
+
 	return retval
+
 end
 
 Player.LoadSavedMeta = function(src)
+
 	-- get current metadata
 	local Meta = Players.GetMeta(src)
+
+	Log('started loading metadata', Meta.info.guid)
+
 	-- fetch the saved metadata
 	Meta.stats = json.decode(MySQL.Sync.fetchSingle('SELECT stats FROM users_stats WHERE guid = ?', { Meta.info.guid }).stats or '[]')
+
 	-- verify the integerity of the saved metadata
 	Meta = Player.VerifyMeta(Meta)
+
+	Log('done loading metadata', Meta.info.guid)
+
 	-- updated the metadata
 	Players.AddMeta(src, Meta)
+
 end
 
 Player.Connect = function(playerName, setKickReason, deferrals)
@@ -94,6 +111,7 @@ Player.Connect = function(playerName, setKickReason, deferrals)
 		Meta.info.guid = result[1].guid
 		Meta.info.identifiers = FSXEngine.core.table.expand(Meta.info.identifiers, json.decode(result[1].identifiers), false)
 	end
+	Log('connecting to server', Meta.info.guid)
 	Meta = Player.VerifyMeta(Meta)
 	if (not firstTime) or (firstTime and Player.SaveMeta(Meta)) then
 		Players.AddMeta(src, Meta)
@@ -104,6 +122,7 @@ end
 Player.Joining = function(tempId)
 	local src = source
 	local Meta = Players.GetMeta(tempId)
+	Log('joining the server', Meta.info.guid)
 	Meta.state.connecting = false
 	Meta.state.joining = true
 	Players.AddMeta(src, Meta)
@@ -114,6 +133,7 @@ end
 Player.Joined = function(src)
 	src = source or src
 	local Meta = Players.GetMeta(src)
+	Log('joined the server', Meta.info.guid)
 	Meta.state.joining = false
 	Meta.state.mainMenu = true
 	Players.AddMeta(src, Meta)
@@ -122,6 +142,7 @@ end
 Player.Dropped = function()
 	local Meta = Players.GetMeta(source)
 	if Meta ~= nil then
+		Log('left the server', Meta.info.guid)
 		Player.VerifyMeta(Meta, true)
 		Player.SaveMeta(Meta)
 	end

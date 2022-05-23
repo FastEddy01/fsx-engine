@@ -52,23 +52,34 @@ shared_scripts {
 }
 
 server_scripts {
+
+	-- load mysql library
+	"@oxmysql/lib/MySQL.lua",
+
 	-- load system parts
 	"system/server/*.lua",
 	"system/network/*.lua",
+
 	-- load system
 	"system/system.lua",
+
 	-- load the exporting of the system, core and config
 	"xport/server.lua"
+
 }
 
 client_scripts {
+
 	-- load enviorment parts
 	"enviorment/entity/*.lua",
 	"enviorment/vision/*.lua",
+
 	-- load enviorment
 	"enviorment/enviorment.lua",
+
 	-- load the exporting of the enviorment, core and config
 	"xport/client.lua"
+
 }
 
 -- load the update checker
