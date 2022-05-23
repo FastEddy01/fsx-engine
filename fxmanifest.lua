@@ -57,8 +57,8 @@ server_scripts {
 	"@oxmysql/lib/MySQL.lua",
 
 	-- load system parts
-	"system/server/*.lua",
-	"system/network/*.lua",
+	"system/server/**/*.lua",
+	"system/network/**/*.lua",
 
 	-- load system
 	"system/system.lua",
